@@ -1,0 +1,30 @@
+{
+  "name": "strategies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "anand",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.6",
+    "knex-migrate": "^1.7.4",
+    "mysql": "^2.18.1",
+    "objection": "^2.2.3",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth": "^2.0.0",
+    "passport-linkedin-oauth2": "^2.0.0"
+  }
+}
