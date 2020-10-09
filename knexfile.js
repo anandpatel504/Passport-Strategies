@@ -9,18 +9,18 @@ module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      database: 'passportDB',
-      user:     'root',
-      password: 'anandbabu'
+      database: process.env.DB_NAME,
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASS
     }
   },
 
   staging: {
     client: 'mysql',
     connection: {
-      database: 'passportDB',
-      user:     'root',
-      password: 'anandbabu'
+      database: process.env.DB_NAME,
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASS
     },
     pool: {
       min: 2,
