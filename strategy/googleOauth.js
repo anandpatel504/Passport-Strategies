@@ -39,10 +39,10 @@ module.exports = (app, passport) =>{
     passport.authenticate('google', { failureRedirect: '/login' }),
     async function(req, res) {
       console.log(res.req.user, "this is response");
-      const token = jwt.sign({"name": res.req.user.displayName, "email": res.req.user.emails[0].value}, "anand", { expiresIn: '2h' });
+      const token = jwt.sign({"id": res.req.user.id,"name": res.req.user.displayName, "email": res.req.user.emails[0].value}, "anand", { expiresIn: '2h' });
       console.log(token, "jwt token");
       req.app.set('user', res.req.user);
-      // res.redirect('http://localhost:3000/home?token='+token);
-      res.redirect('/home');
+      res.redirect('http://localhost:3000/home?token='+token);
+      // res.redirect('/home');
   });
 }

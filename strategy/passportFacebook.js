@@ -3,6 +3,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const knex = require('../config/config');
 const FacebookUserService = require('../services/facebookUsers');
 const Services = new FacebookUserService();
+const jwt = require('jsonwebtoken');
 
 module.exports = (app, passport) =>{
 
@@ -24,13 +25,13 @@ module.exports = (app, passport) =>{
         if (userData.length>0){
           var userInfoUpdate = await Services.Update({"facebook_id": id, "name": name, "email": email, "profile_picture": picture})
           if (userInfoUpdate) {
-            var userInfo = await Services.findOne({facebook_id:id});
+            await Services.findOne({facebook_id:id});
           }
         }else{
-          var userInfo = await Services.Create({"facebook_id": id, "name": name, "email": email, "profile_picture": picture})
+          await Services.Create({"facebook_id": id, "name": name, "email": email, "profile_picture": picture})
         }
 
-        done(null, userInfo);
+        done(null, profile);
       }
     ));
 
@@ -43,9 +44,11 @@ module.exports = (app, passport) =>{
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedireact:'/',failureRedirect: '/login' }),
         function (req, res) {
             console.log(res.req.user, "res data");
-            // res.send('Home Page')
+            const token = jwt.sign({"id": res.req.user.id,"name": res.req.user.displayName, "email": res.req.user.emails[0].value}, "anand", { expiresIn: '2h' });
+            console.log(token, "jwt token");
             req.app.set('user', res.req.user);
-            res.redirect('/home');
+            res.redirect('http://localhost:3000/home?token='+token);
+            // res.redirect('/home');
         }
     );
 }

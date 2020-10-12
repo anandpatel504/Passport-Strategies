@@ -2,6 +2,7 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const knex = require('../config/config');
 const GithubUserService = require('../services/githubUsers');
 const Services = new GithubUserService();
+const jwt = require('jsonwebtoken');
 
 module.exports = (app, passport) => {
     passport.use(new GitHubStrategy({
@@ -19,12 +20,12 @@ module.exports = (app, passport) => {
         if (userData.length>0){
             var userInfoUpdate = await Services.Update({"github_id": id, "name": name, "user_name": login, "email": String(email), "profile_picture": avatar_url})
             if (userInfoUpdate) {
-              var userInfo = await Services.findOne({github_id:id});
+              await Services.findOne({github_id:id});
             }
           }else{
-            var userInfo = await Services.Create({"github_id": id, "name": name, "user_name": login, "email": String(email), "profile_picture": avatar_url})
+            await Services.Create({"github_id": id, "name": name, "user_name": login, "email": String(email), "profile_picture": avatar_url})
           }
-        done(null, userInfo);
+        done(null, profile);
       }
     ));
 
@@ -38,6 +39,9 @@ module.exports = (app, passport) => {
     function(req, res) {
         // console.log(res.req.user, "this is res");
         req.app.set('user', res.req.user);
-        res.redirect('/home');
+        const token = jwt.sign({"id": res.req.user.id,"name": res.req.user.displayName}, "anand", { expiresIn: '2h' });
+        console.log(token, "jwt token");
+        res.redirect('http://localhost:3000/home?token='+token);
+        // res.redirect('/home');
     });
 }
